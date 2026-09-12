@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terugleverkosten-rekenaar: staffel of per kWh, wat kost het u?</title>
+<meta name="description" content="Open rekentool voor terugleverkosten bij zonnepanelen. Vergelijk een vast maandbedrag in staffels met een tarief per teruggeleverde kWh, en zie waar het kantelpunt ligt. Inclusief wat er op 1 januari 2027 verandert.">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#080A10;--bg-2:#0C1019;--surface:#121722;--card:#151B28;--raise:#1B2231;
+  --ink:#E8EDF5;--ink-2:#B7C1D1;--muted:#8492A6;
+  --line:rgba(232,237,245,.13);--line-2:rgba(232,237,245,.26);
+  --lime:#C6F24E;--lime-2:#D8FF74;--on-lime:#0A0D14;
+  --amber:#FFB25C;--coral:#FF7A59;--cyan:#5BD9E8;
+  --r:13px;--w:980px;
+  --display:"Space Grotesk","Segoe UI",system-ui,Arial,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{width:min(100% - 2rem,var(--w));margin-inline:auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.03em;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.8rem,4vw,2.7rem)}
+h2{font-size:1.35rem;margin:2.2rem 0 .8rem}
+h3{font-size:1rem}
+p{margin:0 0 1rem;max-width:68ch}
+a{color:var(--lime)}
+header{padding:2.4rem 0 2.6rem;background:radial-gradient(ellipse 70% 90% at 80% 0%,rgba(198,242,78,.14),transparent 60%),var(--bg-2);border-bottom:1px solid var(--line)}
+header p{color:var(--ink-2);margin:.9rem 0 0}
+.badge{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);border:1px solid rgba(198,242,78,.4);border-radius:999px;padding:.25rem .7rem;margin-bottom:1rem}
+main{padding:0 0 3rem}
+.panel{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:1.4rem;box-shadow:0 24px 60px -32px rgba(0,0,0,.8);margin-top:-1.6rem;position:relative;z-index:2}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.85rem}
+.f{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.f label{font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.f .hint{font-size:.72rem;color:var(--muted);font-weight:400}
+.inp{display:flex;align-items:center;background:var(--raise);border:1.5px solid var(--line-2);border-radius:8px;overflow:hidden;min-width:0}
+.inp:focus-within{border-color:var(--lime);box-shadow:0 0 0 3px rgba(198,242,78,.16)}
+.inp input,.inp select{flex:1;min-width:0;font:inherit;font-size:.95rem;padding:.55rem .7rem;border:0;background:transparent;color:var(--ink)}
+.inp input:focus,.inp select:focus{outline:none}
+.inp .u,.inp .p{padding:0 .7rem;color:var(--muted);font-size:.8rem;white-space:nowrap;flex:none}
+.inp .p{padding:0 0 0 .7rem}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1.5rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+.out .k{font-family:var(--mono);font-size:.69rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
+.out output{font-family:var(--display);font-size:1.75rem;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;display:block;line-height:1.1}
+.out .note{font-size:.78rem;color:var(--muted);margin:.3rem 0 0}
+.win{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--lime);border-radius:0 var(--r) var(--r) 0;padding:1rem 1.2rem}
+.win p{margin:0;font-size:.98rem;max-width:none}
+.win strong{color:var(--lime)}
+figure{margin:2rem 0 0}
+svg.chart{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+figcaption{font-size:.8rem;color:var(--muted);margin-top:.7rem}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:.6rem}
+.legend i{width:22px;height:3px;display:inline-block;margin-right:.4rem;vertical-align:3px;border-radius:2px}
+.warn{background:rgba(255,178,92,.09);border:1px solid rgba(255,178,92,.4);border-radius:var(--r);padding:1.1rem 1.3rem;margin-top:1.6rem}
+.warn h3{color:var(--amber);margin-bottom:.5rem}
+.warn p{font-size:.92rem;color:var(--ink-2)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.8rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.73rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tag{font-family:var(--mono);font-size:.66rem;padding:.1rem .4rem;border-radius:4px;background:rgba(255,178,92,.15);color:var(--amber);border:1px solid rgba(255,178,92,.35)}
+.method{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem 1.4rem;margin-top:1.6rem}
+.method h3{margin-bottom:.5rem}
+.method p,.method li{font-size:.9rem;color:var(--ink-2)}
+.method ul{padding-left:1.1rem;margin:.5rem 0 0}
+.method li{margin-bottom:.4rem}
+footer{border-top:1px solid var(--line);padding:1.6rem 0;font-size:.85rem;color:var(--muted);margin-top:2.5rem}
+@media (max-width:560px){.panel{padding:1rem}.out output{font-size:1.5rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="badge">Open data &middot; MIT</span>
+    <h1>Terugleverkosten: staffel of per kWh?</h1>
+    <p>Leveranciers rekenen terugleverkosten op twee onderling onvergelijkbare manieren. Daardoor bestaat er geen ranglijst die voor iedereen klopt: wie weinig teruglevert is bij een ander bedrijf goedkoper uit dan wie veel teruglevert. Vul uw eigen teruglevering in en zie waar het kantelpunt ligt.</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section class="panel">
+    <h2 style="margin-top:0">Uw situatie</h2>
+    <div class="grid">
+      <div class="f">
+        <label for="terug">Teruglevering per jaar</label>
+        <div class="inp"><input id="terug" type="text" inputmode="numeric" value="2500"><span class="u">kWh</span></div>
+      </div>
+      <div class="f">
+        <label for="staffel">Staffel: vast bedrag <span class="hint">per maand</span></label>
+        <div class="inp"><span class="p">&euro;</span><input id="staffel" type="text" inputmode="decimal" value="7,50"><span class="u">/ mnd</span></div>
+      </div>
+      <div class="f">
+        <label for="perkwh">Per kWh: tarief</label>
+        <div class="inp"><span class="p">&euro;</span><input id="perkwh" type="text" inputmode="decimal" value="0,036"><span class="u">/ kWh</span></div>
+      </div>
+      <div class="f">
+        <label for="verg">Terugleververgoeding <span class="hint">optioneel</span></label>
+        <div class="inp"><span class="p">&euro;</span><input id="verg" type="text" inputmode="decimal" value="0,07"><span class="u">/ kWh</span></div>
+      </div>
+    </div>
+
+    <div class="out">
+      <div>
+        <span class="k">Staffel per jaar</span>
+        <output id="oStaf" style="color:var(--cyan)">&mdash;</output>
+        <p class="note">Vast bedrag &times; 12, ongeacht hoeveel u teruglevert.</p>
+      </div>
+      <div>
+        <span class="k">Per kWh per jaar</span>
+        <output id="oKwh" style="color:var(--amber)">&mdash;</output>
+        <p class="note">Schaalt mee met uw teruglevering.</p>
+      </div>
+      <div>
+        <span class="k">Kantelpunt</span>
+        <output id="oKantel" style="color:var(--lime)">&mdash;</output>
+        <p class="note" id="nKantel">Boven dit volume is de staffel gunstiger.</p>
+      </div>
+      <div>
+        <span class="k">Netto teruglevering</span>
+        <output id="oNetto">&mdash;</output>
+        <p class="note">Vergoeding minus de goedkoopste van de twee kostenmethodes.</p>
+      </div>
+      <div class="win"><p id="verdict">&nbsp;</p></div>
+    </div>
+  </section>
+
+  <figure>
+    <svg class="chart" id="chart" viewBox="0 0 920 330" role="img" aria-labelledby="ct"><title id="ct">Jaarkosten van beide methodes tegen de hoeveelheid teruggeleverde stroom.</title></svg>
+    <div class="legend">
+      <span><i style="background:var(--cyan)"></i>Staffel (vast per maand)</span>
+      <span><i style="background:var(--amber)"></i>Per teruggeleverde kWh</span>
+      <span><i style="background:var(--lime)"></i>Uw teruglevering</span>
+    </div>
+    <figcaption>De twee methodes kruisen elkaar. Links van het kruispunt is per kWh goedkoper, rechts de staffel &mdash; of andersom, afhankelijk van de tarieven die u invult.</figcaption>
+  </figure>
+
+  <section class="warn">
+    <h3>Wat er op 1 januari 2027 verandert</h3>
+    <p>De salderingsregeling stopt op <strong>1 januari 2027</strong>, vastgelegd door de Eerste Kamer op 17 december 2024. Vrijwel de hele markt stapt op dat moment over van staffels naar een tarief <strong>per teruggeleverde kWh</strong>. Elke vergelijking die op staffels is gebaseerd, verliest dan haar geldigheid. Vanaf 2027 moet de terugleververgoeding minimaal 50% van het kale leveringstarief zijn; die ondergrens geldt tot 2030.</p>
+  </section>
+
+  <section>
+    <h2>Seed-dataset per leverancier</h2>
+    <p id="dsWarn" style="font-size:.92rem;color:var(--amber)"></p>
+    <div style="overflow-x:auto">
+      <table id="tbl"><thead><tr><th>Leverancier</th><th>Methode</th><th>Indicatie per jaar</th><th>Zekerheid</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section class="method">
+    <h3>Waarom dit een seed-dataset is, en geen ranglijst</h3>
+    <p>Terugleverkosten staan verspreid over losse tarievenbladen, veranderen per kwartaal en worden per 2027 marktbreed omgegooid. Deze repository bevat daarom bewust een <strong>startpunt</strong> in plaats van een pretentie van volledigheid.</p>
+    <ul>
+      <li>Alle bedragen zijn <strong>indicatief</strong> en afkomstig uit openbare secundaire bronnen. Controleer het actuele tarievenblad van uw leverancier voordat u hierop een keuze baseert.</li>
+      <li>De rekenkern werkt ongeacht de dataset: vul de tarieven van úw leverancier in en de vergelijking klopt.</li>
+      <li>Aanvullingen met bronvermelding zijn welkom als pull request op <code>data/terugleverkosten.json</code>. Elk record heeft velden voor bron, bron-URL, controledatum en zekerheid.</li>
+    </ul>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Gemaakt door <a href="https://energievergelijken2027.nl/">energievergelijken2027.nl</a> &middot;
+    Wettelijk kader: <a href="https://www.rijksoverheid.nl/themas/klimaat-milieu-en-natuur/energie-thuis/salderingsregeling">Rijksoverheid over de salderingsregeling</a> &middot;
+    MIT-licentie &middot;
+    <a href="https://github.com/tyscode14/energie-terugleverkosten-monitor">Broncode en data op GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var $=function(s){return document.querySelector(s);};
+  function num(v){return parseFloat(String(v||'0').replace(/\./g,'').replace(',','.'))||0;}
+  function eur(n){return '€ '+(Math.round(n*100)/100).toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFractionDigits:0});}
+
+  function compute(){
+    var t=num($('#terug').value), sm=num($('#staffel').value), pk=num($('#perkwh').value), vg=num($('#verg').value);
+    var staf=sm*12, kwh=t*pk;
+    $('#oStaf').textContent=eur(staf);
+    $('#oKwh').textContent=eur(kwh);
+    var kantel = pk>0 ? staf/pk : 0;
+    $('#oKantel').textContent = pk>0 ? Math.round(kantel).toLocaleString('nl-NL')+' kWh' : '—';
+    $('#nKantel').textContent = pk>0
+      ? 'Boven '+Math.round(kantel).toLocaleString('nl-NL')+' kWh teruglevering is de staffel goedkoper.'
+      : 'Vul een tarief per kWh in.';
+    var goedkoopst=Math.min(staf,kwh);
+    var netto=t*vg-goedkoopst;
+    $('#oNetto').textContent=eur(netto);
+    $('#oNetto').style.color = netto>=0 ? 'var(--lime)' : 'var(--coral)';
+    var v=$('#verdict'), diff=Math.abs(staf-kwh);
+    if(staf===kwh){ v.innerHTML='Bij '+t.toLocaleString('nl-NL')+' kWh kosten beide methodes u precies evenveel.'; }
+    else if(kwh<staf){ v.innerHTML='Bij <strong>'+t.toLocaleString('nl-NL')+' kWh</strong> teruglevering is een tarief <strong>per kWh</strong> voor u '+eur(diff)+' per jaar goedkoper dan de staffel. Levert u meer terug dan '+Math.round(kantel).toLocaleString('nl-NL')+' kWh, dan draait dat om.'; }
+    else { v.innerHTML='Bij <strong>'+t.toLocaleString('nl-NL')+' kWh</strong> teruglevering is de <strong>staffel</strong> voor u '+eur(diff)+' per jaar goedkoper. Levert u minder terug dan '+Math.round(kantel).toLocaleString('nl-NL')+' kWh, dan draait dat om.'; }
+    draw(t,sm,pk);
+  }
+
+  function draw(t,sm,pk){
+    var svg=$('#chart'),W=920,H=330,L=64,R=18,T=18,B=38;
+    var maxX=Math.max(5000,t*1.6), staf=sm*12;
+    var maxY=Math.max(staf,pk*maxX,10)*1.15;
+    function X(v){return L+(v/maxX)*(W-L-R);}
+    function Y(v){return T+(1-v/maxY)*(H-T-B);}
+    var p=[];
+    for(var g=0;g<=4;g++){var gy=Y(maxY*g/4);
+      p.push('<line x1="'+L+'" y1="'+gy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+gy.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>');
+      p.push('<text x="8" y="'+(gy+4).toFixed(1)+'" font-size="10" fill="var(--muted)" font-family="ui-monospace,monospace">€'+Math.round(maxY*g/4)+'</text>');}
+    p.push('<line x1="'+L+'" y1="'+Y(staf).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(staf).toFixed(1)+'" stroke="var(--cyan)" stroke-width="2.4"/>');
+    p.push('<line x1="'+X(0)+'" y1="'+Y(0).toFixed(1)+'" x2="'+X(maxX)+'" y2="'+Y(pk*maxX).toFixed(1)+'" stroke="var(--amber)" stroke-width="2.4"/>');
+    if(pk>0){var kx=staf/pk; if(kx<=maxX){
+      p.push('<circle cx="'+X(kx).toFixed(1)+'" cy="'+Y(staf).toFixed(1)+'" r="5" fill="none" stroke="var(--ink-2)" stroke-width="2"/>');
+      p.push('<text x="'+(X(kx)+9).toFixed(1)+'" y="'+(Y(staf)-9).toFixed(1)+'" font-size="10" fill="var(--ink-2)" font-family="ui-monospace,monospace">kantelpunt '+Math.round(kx)+' kWh</text>');}}
+    p.push('<line x1="'+X(t).toFixed(1)+'" y1="'+T+'" x2="'+X(t).toFixed(1)+'" y2="'+(H-B)+'" stroke="var(--lime)" stroke-width="2" stroke-dasharray="5 4"/>');
+    p.push('<text x="'+(X(t)+6).toFixed(1)+'" y="'+(T+12)+'" font-size="10" fill="var(--lime)" font-family="ui-monospace,monospace">u: '+Math.round(t)+' kWh</text>');
+    for(var i=0;i<=5;i++){var xv=maxX*i/5;
+      p.push('<text x="'+X(xv).toFixed(1)+'" y="'+(H-14)+'" font-size="10" fill="var(--muted)" text-anchor="middle" font-family="ui-monospace,monospace">'+Math.round(xv)+'</text>');}
+    p.push('<text x="'+(W/2)+'" y="'+(H-2)+'" font-size="10" fill="var(--muted)" text-anchor="middle">teruglevering per jaar (kWh)</text>');
+    svg.innerHTML='<title id="ct">Jaarkosten van beide methodes tegen de hoeveelheid teruggeleverde stroom.</title>'+p.join('');
+  }
+
+  ['#terug','#staffel','#perkwh','#verg'].forEach(function(s){
+    document.addEventListener('input',function(e){ if(e.target.matches(s)) compute(); });
+  });
+
+  fetch('data/terugleverkosten.json').then(function(r){return r.json();}).then(function(d){
+    $('#dsWarn').textContent=d.meta.waarschuwing;
+    $('#tbl').querySelector('tbody').innerHTML=d.leveranciers.map(function(l){
+      var ind = l.indicatie_per_jaar_bij_2500kwh!=null ? '± € '+l.indicatie_per_jaar_bij_2500kwh+' bij 2.500 kWh'
+              : (l.bandbreedte_per_jaar ? '€ '+l.bandbreedte_per_jaar[0]+' – € '+l.bandbreedte_per_jaar[1] : 'onbekend');
+      var m = l.methode==='per_kwh' ? 'per teruggeleverde kWh' : 'vast bedrag per maand, staffel';
+      return '<tr><td><b>'+l.naam+'</b></td><td>'+m+'</td><td>'+ind+'</td><td><span class="tag">'+l.zekerheid+'</span></td></tr>';
+    }).join('')+'<tr><td colspan="4" style="color:var(--muted);font-size:.86rem">Marktspreiding 2026: <b>€ '+d.meta.marktspreiding_2026_per_jaar.min+' tot € '+d.meta.marktspreiding_2026_per_jaar.max+'</b> per jaar.</td></tr>';
+  }).catch(function(){ $('#dsWarn').textContent='Kon data/terugleverkosten.json niet laden. Open deze pagina via een webserver.'; });
+
+  compute();
+})();
+</script>
+</body>
+</html>

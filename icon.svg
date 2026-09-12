@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Terugleverkosten monitor">
+  <rect width="64" height="64" rx="14" fill="#080A10"/>
+  <line x1="10" y1="26" x2="54" y2="26" stroke="#5BD9E8" stroke-width="4" stroke-linecap="round"/>
+  <line x1="10" y1="48" x2="54" y2="18" stroke="#FFB25C" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="34.2" cy="26" r="5" fill="#080A10" stroke="#C6F24E" stroke-width="3.2"/>
+</svg>

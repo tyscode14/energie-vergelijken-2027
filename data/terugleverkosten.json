@@ -1,0 +1,90 @@
+{
+ "meta": {
+  "title": "Terugleverkosten en terugleververgoeding per energieleverancier",
+  "publisher": "energievergelijken2027.nl",
+  "licence": "MIT",
+  "samengesteld_op": "2026-09-12",
+  "status": "SEED-DATASET — niet compleet en niet leveranciersgeverifieerd",
+  "waarschuwing": "De bedragen hieronder zijn samengesteld uit openbare secundaire bronnen en zijn INDICATIEF. Controleer altijd het actuele tarievenblad van de leverancier voordat u hierop een keuze baseert. Pull requests met bronvermelding zijn welkom.",
+  "waarom_dit_bestaat": "Leveranciers rekenen terugleverkosten op twee onderling onvergelijkbare manieren: een vast bedrag per maand in staffels, of een tarief per teruggeleverde kWh. Daardoor bestaat er geen enkele ranglijst die voor iedereen klopt — wie weinig teruglevert is bij de ene leverancier goedkoper uit dan wie veel teruglevert.",
+  "kantelpunt": "Per 1 januari 2027 stapt vrijwel de hele markt over van staffels naar een tarief per kWh. Vergelijkingen die op staffels gebaseerd zijn, verliezen op dat moment hun geldigheid.",
+  "marktspreiding_2026_per_jaar": {
+   "min": 0,
+   "max": 875,
+   "eenheid": "EUR"
+  }
+ },
+ "wettelijk_kader": {
+  "saldering_stopt": "2027-01-01",
+  "wet": "Wet beëindiging salderingsregeling (wetsvoorstel 36.611), aangenomen door de Eerste Kamer op 17 december 2024",
+  "terugleververgoeding_ondergrens": "Vanaf 2027 minimaal 50% van het kale leveringstarief voor stroom; deze ondergrens geldt tot 2030",
+  "terugleverkosten_regel": "Leveranciers mogen uitsluitend kosten doorberekenen die zij daadwerkelijk maken om teruggeleverde stroom te verwerken. De ACM houdt hier toezicht op.",
+  "bron_url": "https://www.rijksoverheid.nl/themas/klimaat-milieu-en-natuur/energie-thuis/salderingsregeling"
+ },
+ "leveranciers": [
+  {
+   "naam": "Greenchoice",
+   "methode": "staffel_per_maand",
+   "indicatie_per_jaar_bij_2500kwh": 89,
+   "equivalent_ct_per_kwh": 3.6,
+   "per_kwh": null,
+   "staffel": null,
+   "zekerheid": "indicatief",
+   "bron": "Secundaire bron, september 2026",
+   "bron_url": null
+  },
+  {
+   "naam": "Eneco",
+   "methode": "staffel_per_maand",
+   "indicatie_per_jaar_bij_2500kwh": null,
+   "bandbreedte_per_jaar": [
+    100,
+    350
+   ],
+   "per_kwh": null,
+   "staffel": null,
+   "zekerheid": "indicatief",
+   "bron": "Secundaire bron, september 2026",
+   "bron_url": null
+  },
+  {
+   "naam": "Essent",
+   "methode": "per_kwh",
+   "indicatie_per_jaar_bij_2500kwh": null,
+   "bandbreedte_per_jaar": [
+    100,
+    350
+   ],
+   "per_kwh": null,
+   "staffel": null,
+   "zekerheid": "indicatief",
+   "bron": "Secundaire bron, september 2026",
+   "bron_url": null
+  },
+  {
+   "naam": "Vattenfall",
+   "methode": "per_kwh",
+   "indicatie_per_jaar_bij_2500kwh": null,
+   "bandbreedte_per_jaar": [
+    100,
+    350
+   ],
+   "per_kwh": null,
+   "staffel": null,
+   "zekerheid": "indicatief",
+   "bron": "Secundaire bron, september 2026",
+   "bron_url": null
+  },
+  {
+   "naam": "Budget Thuis",
+   "methode": "per_kwh",
+   "indicatie_per_jaar_bij_2500kwh": null,
+   "bandbreedte_per_jaar": null,
+   "per_kwh": null,
+   "staffel": null,
+   "zekerheid": "indicatief",
+   "bron": "Secundaire bron, september 2026",
+   "bron_url": null
+  }
+ ]
+}
