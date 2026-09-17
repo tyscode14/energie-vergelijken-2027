@@ -2,7 +2,7 @@
 
 Open rekentool voor de **terugleverkosten** die energieleveranciers rekenen als u stroom van uw zonnepanelen teruglevert. Eén HTML-bestand, geen build, geen tracking, geen afhankelijkheden. Gemaakt door [energievergelijken2027.nl](https://energievergelijken2027.nl), MIT-licentie.
 
-**Gebruik de tool:** https://tyscode14.github.io/energie-terugleverkosten-monitor/
+**Gebruik de tool:** https://tyscode14.github.io/energie-vergelijken-2027/
 
 ## Het probleem dat deze tool oplost
 
